@@ -745,4 +745,37 @@ class EngagePod {
 
     }
 
+    /**
+     * Purges data
+     *
+     * Requires a targetID & sourceID
+     *
+     * Returns the data job id
+     *
+     */
+    public function purgeData($targetID, $sourceID) {
+
+        $data["Envelope"] = array(
+            "Body" => array(
+                "PurgeData" => array(
+                    "TARGET_ID" => $targetID,
+                    "SOURCE_ID" => $sourceID
+                ),
+            ),
+        );
+
+        $response = $this->_request($data);
+        $result = $response["Envelope"]["Body"]["RESULT"];
+
+        if ($this->_isSuccess($result)) {
+            if (isset($result['JOB_ID']))
+                return $result['JOB_ID'];
+            else {
+                throw new \Exception('Purge data created but no job ID was returned from the server.');
+            }
+        } else {
+            throw new \Exception("purgeData Error: ".$this->_getErrorFromResponse($response));
+        }
+    }
+
 }
