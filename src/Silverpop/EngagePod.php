@@ -183,7 +183,7 @@ class EngagePod {
      * 20 – Multi-Select
      * 
      */
-    public function addListColumn($databaseID, $columnName, $columnType) {
+    public function addListColumn($databaseID, $columnName, $columnType, $defaultValue = null, $selectionValues = Array()) {
         $data["Envelope"] = array(
             "Body" => array(
                 "AddListColumn" => array(
@@ -193,6 +193,17 @@ class EngagePod {
                 ),
             ),
         );
+
+        if($defaultValue) {
+          $data['Envelope']['Body']['AddListColumn']['DEFAULT'] = $defaultValue;
+        }
+
+        if(count($selectionValues) {
+          foreach($selectionValues as $value) {
+            $data['Envelope']['Body']['AddListColumn']['SELECTION_VALUES'][] = Array('VALUE' => $value);
+          }
+        }
+
         $response = $this->_request($data);
         $result = $response["Envelope"]["Body"]["RESULT"];
         if ($this->_isSuccess($result)) {
