@@ -181,7 +181,10 @@ class EngagePod {
      * 16 – Phone Number
      * 17 – Timestamp
      * 20 – Multi-Select
-     * 
+     *
+     * $selectionValues: Specifies the default value for the new column. For a multi-select column, the default value
+will be a semi-colon delimited list of values 
+     *
      */
     public function addListColumn($databaseID, $columnName, $columnType, $defaultValue = null, $selectionValues = Array()) {
         $data["Envelope"] = array(
@@ -198,7 +201,7 @@ class EngagePod {
           $data['Envelope']['Body']['AddListColumn']['DEFAULT'] = $defaultValue;
         }
 
-        if(count($selectionValues) {
+        if(count($selectionValues)) {
           foreach($selectionValues as $value) {
             $data['Envelope']['Body']['AddListColumn']['SELECTION_VALUES'][] = Array('VALUE' => $value);
           }
