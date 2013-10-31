@@ -162,6 +162,61 @@ class EngagePod {
     }
     
     /**
+     *  Add a column to an existing Engage Database
+     * 
+     * $columnType:
+     * Defines what type of column to create. The following is a list of valid values :
+     * 
+     * 0 – Text column
+     * 1 – YES/No column
+     * 2 – Numeric column
+     * 3 – Date column
+     * 4 – Time column
+     * 5 – Country column
+     * 6 – Select one
+     * 8 – Segmenting
+     * 13 – SMS Opt In
+     * 14 – SMS Opted Out Date
+     * 15 – SMS Phone Number
+     * 16 – Phone Number
+     * 17 – Timestamp
+     * 20 – Multi-Select
+     *
+     * $selectionValues: Specifies the default value for the new column. For a multi-select column, the default value
+will be a semi-colon delimited list of values 
+     *
+     */
+    public function addListColumn($databaseID, $columnName, $columnType, $defaultValue = null, $selectionValues = Array()) {
+        $data["Envelope"] = array(
+            "Body" => array(
+                "AddListColumn" => array(
+                    "LIST_ID" => $databaseID,
+                    "COLUMN_NAME" => $columnName,
+                    "COLUMN_TYPE" => $columnType,
+                ),
+            ),
+        );
+
+        if($defaultValue) {
+          $data['Envelope']['Body']['AddListColumn']['DEFAULT'] = $defaultValue;
+        }
+
+        if(count($selectionValues)) {
+          foreach($selectionValues as $value) {
+            $data['Envelope']['Body']['AddListColumn']['SELECTION_VALUES'][] = Array('VALUE' => $value);
+          }
+        }
+
+        $response = $this->_request($data);
+        $result = $response["Envelope"]["Body"]["RESULT"];
+        if ($this->_isSuccess($result)) {
+            return true;
+        } else {
+            throw new \Exception("Silverpop says: ".$response["Envelope"]["Body"]["Fault"]["FaultString"]);
+        }
+    }
+    
+    /**
      * Remove a contact
      * 
      */
