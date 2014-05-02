@@ -9,7 +9,7 @@ Installation via [composer](http://getcomposer.org) . Create a composer.json fil
 ```javascript
 {
     "require": {
-        "simpleweb/silverpopphp": "master-dev"
+        "ckdarby/silverpopphp": "master-dev"
     }
 }
 ```
