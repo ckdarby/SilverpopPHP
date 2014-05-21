@@ -247,7 +247,7 @@ will be a semi-colon delimited list of values
      * Add a contact to a list
      *
      */
-    public function addContact($databaseID, $updateIfFound, $columns, $contactListID = false $sendAutoReply = false) {
+    public function addContact($databaseID, $updateIfFound, $columns, $contactListID = false, $sendAutoReply = false) {
         $data["Envelope"] = array(
             "Body" => array(
                 "AddRecipient" => array(
