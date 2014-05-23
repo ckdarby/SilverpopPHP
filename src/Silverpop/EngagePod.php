@@ -289,9 +289,9 @@ will be a semi-colon delimited list of values
             ),
         );
 
-	if($contactListID) {
-		$data["Envelope"]["Body"]["AddRecipient"]["CONTACT_LISTS"] = Array("CONTACT_LIST_ID" => $contactListID);
-	}
+    if($contactListID) {
+        $data["Envelope"]["Body"]["AddRecipient"]["CONTACT_LISTS"] = Array("CONTACT_LIST_ID" => $contactListID);
+    }
 
         foreach ($columns as $name => $value) {
             $data["Envelope"]["Body"]["AddRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => $value);
