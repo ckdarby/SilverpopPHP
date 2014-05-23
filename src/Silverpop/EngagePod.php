@@ -35,6 +35,35 @@ class EngagePod {
 
     }
 
+
+    public function exportList($databaseID, $dateEnd = null) {
+        $data["Envelope"] = array(
+            "Body" => array(
+                "ExportList" => array(
+                    "LIST_ID" => $databaseID,
+                    "EXPORT_TYPE" => 'ALL',
+                    "EXPORT_FORMAT" => 'CSV',
+                    "ADD_TO_STORED_FILES" => '',
+                    "DATE_END" => $dateEnd
+                ),
+            ),
+        );
+
+        if($dateEnd) {
+            $data["Envelope"]["Body"]["ExportList"]["DATE_END"] = $dateEnd;
+        }
+
+        $response = $this->_request($data);
+
+        $result = $response["Envelope"]["Body"]["RESULT"];
+
+        if ($this->_isSuccess($result)) {
+            return array('JOB_ID' => $result['JOB_ID'], 'FILE_PATH' => $result['FILE_PATH']);
+        } else {
+            throw new Exception("ExportList Error: ".$this->_getErrorFromResponse($response));
+      }
+   }
+
     /**
      * Fetches the contents of a list
      *
@@ -255,11 +284,15 @@ will be a semi-colon delimited list of values
                     "CREATED_FROM" => 1,         // 1 = created manually, 2 = opted in
                     "SEND_AUTOREPLY"  => ($sendAutoReply ? 'true' : 'false'),
                     "UPDATE_IF_FOUND" => ($updateIfFound ? 'true' : 'false'),
-                    "CONTACT_LISTS" => ($contactListID) ? array("CONTACT_LIST_ID" => $contactListID) : '',
                     "COLUMN" => array(),
                 ),
             ),
         );
+
+	if($contactListID) {
+		$data["Envelope"]["Body"]["AddRecipient"]["CONTACT_LISTS"] = Array("CONTACT_LIST_ID" => $contactListID);
+	}
+
         foreach ($columns as $name => $value) {
             $data["Envelope"]["Body"]["AddRecipient"]["COLUMN"][] = array("NAME" => $name, "VALUE" => $value);
         }
